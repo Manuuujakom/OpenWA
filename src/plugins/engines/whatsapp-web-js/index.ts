@@ -7,13 +7,6 @@ import { PluginContext, PluginType, IEnginePlugin } from '../../../core/plugins'
 import { IWhatsAppEngine } from '../../../engine/interfaces/whatsapp-engine.interface';
 import { WhatsAppWebJsAdapter } from '../../../engine/adapters/whatsapp-web-js.adapter';
 
-export interface WhatsAppWebJsConfig {
-  sessionDataPath?: string;
-  headless?: boolean;
-  puppeteerArgs?: string[];
-  executablePath?: string;
-}
-
 export class WhatsAppWebJsPlugin implements IEnginePlugin {
   type = PluginType.ENGINE as const;
   private context?: PluginContext;
