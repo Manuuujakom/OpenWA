@@ -350,7 +350,11 @@ export class BaileysAdapter implements IWhatsAppEngine {
     try {
       const metadata = await this.sock!.groupMetadata(groupId);
       return mapBaileysGroupInfo(metadata);
-    } catch {
+    } catch (err) {
+      this.logger.debug('groupMetadata failed; treating as not-found', {
+        groupId,
+        error: err instanceof Error ? err.message : String(err),
+      });
       return null; // not a group / not found
     }
   }
@@ -410,7 +414,11 @@ export class BaileysAdapter implements IWhatsAppEngine {
     this.ensureReady();
     try {
       return (await this.sock!.profilePictureUrl(contactId, 'image')) ?? null;
-    } catch {
+    } catch (err) {
+      this.logger.debug('profilePictureUrl failed; no picture or hidden', {
+        contactId,
+        error: err instanceof Error ? err.message : String(err),
+      });
       return null; // no picture set, or hidden by privacy
     }
   }
