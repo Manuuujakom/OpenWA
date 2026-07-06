@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Opt-in `VALIDATION_ERROR_DETAIL`** exposes field-level validation error messages on `400` responses (hidden by default in production, where a bad request otherwise returns a generic message so the DTO shape isn't reflected back). Set it to `true` to debug an SDK/integration against a production instance without flipping `NODE_ENV`, or `false` to force it off everywhere.
+
 ### Changed
 
+- **OpenAPI/Swagger tag hygiene.** Every controller tag is now declared in the API document (ten were used but undeclared), the three Integration Fabric controllers gained `@ApiTags`, and the tag casing is uniform — so `/api/docs` groups every endpoint under a described tag instead of leaving some ungrouped.
 - **Graceful shutdown now drains on `SIGTERM`/`SIGINT`** (rolling deploys, `docker stop`, Ctrl+C), not just on the admin restart endpoint. On a termination signal the app flips readiness to `503` immediately so a load balancer/orchestrator stops routing, keeps serving in-flight requests for a bounded grace window, then tears down and exits deterministically. ⚠️ **Behavior change:** a `docker stop` / redeploy now takes up to the grace window (`SHUTDOWN_DELAY_MS`, default **3s** in production, **0** in dev) plus teardown instead of tearing down instantly, and the process now exits `0` on a clean signal. In Docker set `stop_grace_period` ≥ `SHUTDOWN_DELAY_MS` + your worst-case teardown (the bundled compose now sets `45s`); for Kubernetes set `terminationGracePeriodSeconds` accordingly. A second signal during the drain forces an immediate exit. The whatsapp-web.js engine no longer lets Puppeteer install its own signal handlers (which previously killed Chromium at signal time / `exit(130)` before the drain could run).
 - **The bundled Docker Compose stack pins its `docker-socket-proxy` and `minio` images to explicit tags** (they were on `:latest`) for reproducible, non-drifting deploys, and a Dependabot `docker` ecosystem was added so base and stack images keep receiving update PRs. A Node `>=22` `engines` floor + `.nvmrc` were declared, and the transitive install-time Scarf telemetry (via `swagger-ui-dist`) is disabled.
 

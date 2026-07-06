@@ -15,6 +15,7 @@ import { registerUncaughtExceptionMonitor } from './config/process-error-monitor
 import {
   resolveCorsPolicy,
   isSwaggerEnabled,
+  isValidationErrorDetailEnabled,
   isUpgradeInsecureRequestsEnabled,
   resolveBodyLimit,
   assertNoDefaultSecretsInProduction,
@@ -209,7 +210,9 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
-      disableErrorMessages: process.env.NODE_ENV === 'production', // Hide details in prod
+      // Hide field-level validation messages by default in production (so a 400 doesn't reflect the DTO
+      // shape back); opt in with VALIDATION_ERROR_DETAIL=true to debug an SDK/integration against prod.
+      disableErrorMessages: !isValidationErrorDetailEnabled(process.env.VALIDATION_ERROR_DETAIL, process.env.NODE_ENV),
     }),
   );
 
