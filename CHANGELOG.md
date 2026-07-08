@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Redis authentication via username.** Added support for `REDIS_USERNAME` to configure the Redis cache connection and BullMQ queue connections that require a username.
+
 ## [0.8.11] - 2026-07-08
 
 ### Added

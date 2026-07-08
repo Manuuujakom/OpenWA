@@ -3793,6 +3793,7 @@ Merge-save infrastructure config to `data/.env.generated` (a `0600` secret file)
 | `database.sslRejectUnauthorized` | boolean | No | — | Only written when `sslEnabled` is true; default true |
 | `redis.enabled` / `.builtIn` | boolean | No | — | `builtIn`+enabled forces `redis` container + profile |
 | `redis.host` / `.port` | string | No | `port` is a string | Defaults `localhost`/`6379` |
+| `redis.username` | string | No | — | Redis ACL username |
 | `redis.password` | string | No | secret | Empty keeps existing |
 | `queue.enabled` | boolean | No | — | Writes `QUEUE_ENABLED` |
 | `storage.type` | `'local' \| 's3'` | No | — | `local` drops stale S3 keys; `s3` drops `STORAGE_LOCAL_PATH` |
